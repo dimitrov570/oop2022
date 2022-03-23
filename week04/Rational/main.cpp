@@ -18,10 +18,12 @@ int main() {
 
   std::cout << r1.getNumerator() << '\n';
 
-  Rational result = r1.add(r2);
+  Rational result = r1.add(r2); // <==> Rational::add(&r1, r2);
 
   result.print(std::cout);
   std::cout << '\n';
+
+  Rational result = Rational::deserialize(std::cin);
   
   return 0;
 }

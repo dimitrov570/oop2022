@@ -1,8 +1,8 @@
-#include "lib.h"
+#include "lib.hpp"
 #include <iostream>
 
 void print(int a) {
-  std::cout << a <<'\n';  
+  std::cout << a << '\n';  
 }
 
 void foo() {
