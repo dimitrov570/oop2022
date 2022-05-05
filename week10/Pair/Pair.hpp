@@ -48,5 +48,5 @@ void Pair<T, K>::setSecond(K snd) {
 
 template <typename T, typename K>
 std::ostream& operator<<(std::ostream& o, Pair<T, K>& obj) {
-  return o << obj.first << obj.second;
+  return o << obj.first << " : " << obj.second;
 }
