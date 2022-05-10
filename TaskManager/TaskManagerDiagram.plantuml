@@ -1,0 +1,92 @@
+@startuml TM
+skinparam classAttributeIconSize 0
+
+class Task {
+  -size_t id
+  -string name
+  -string description
+  -DateTime due_date
+  -const Label* label
+  -uint8_t weight
+  __
+  .. constructors ..
+  +Task()
+  +Task(size_t, string, string, DateTime, const Label*, uint8_t)
+  .. getters ..
+  +size_t getId() const
+  +string getName() const
+  +string getDescription() const
+  +DateTime getDueDate() const
+  +Label getLabel() const
+  +uint8_t getWeight() const
+  .. setters ..
+  +void setId(size_t)
+  +void setName(const string&)
+  +void setDescription(const string&)
+  +void setDueDate(const DateTime&)
+  +void setLabel(const Label*)
+  +void setWeight(uint8_t)
+  ..
+  +bool operator<(const Task& other)
+  .. friend functions ..
+  istream& operator>>(istream&, Task&)
+  ostream& operator<<(ostream&, const Task&)
+}
+
+class DateTime {
+  -Date date
+  -Time time
+  __
+  +DateTime(Date, Time)
+  .. getters ..
+  +Date getDate() const
+  +Time getTime() const
+  .. setters ..
+  +void setDate(Date)
+  +void setTime(Time)
+  ..
+  +DateTime timeTo(const DateTime&) const
+  +bool operator<(const DateTime&) const
+}
+
+class Date {
+  +int year
+  +uint8_t day
+  +uint8_t month
+}
+
+class Time {
+  +uint8_t h 
+  +uint8_t m
+  +uint8_t s
+}
+
+class Label {
+  +string name
+}
+
+class TaskApp {
+  + void run()
+}
+
+class TaskManager {
+  -size_t id_counter
+  -vector<Task> tasks
+  -vector<Label> labels
+  +loadDataFromFile(const char*)
+  +saveDataToFile(const char*) const
+  .. constructors ..
+  +TaskManager()
+  ..
+  +Task getTaskById(size_t id) const
+  +void changeName(size_t id, const string&)
+  +void changeDescription(size_t id, const string&)
+  +void changeDueDate(size_t id, const DateTime&)
+  +void changeLabel(size_t id, const Label*)
+  +void changeWeight(size_t id, uint8_t)
+  .. friend functions ..
+  istream& operator>>(istream&, TaskManager&)
+  ostram& operator<<(ostream&, const TaskManager&)
+}
+
+@enduml
