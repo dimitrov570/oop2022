@@ -1,6 +1,6 @@
 # Виртуални функции
 
-Нека разгледаме следните два класа: `Person` и `Student` който го наследява. Разглеждаме само `.hpp` файловете, абстрахирайки се от имплементацията.
+Нека разгледаме следните два класа: `Person` и `Student`, който го наследява. Разглеждаме само `.hpp` файловете, абстрахирайки се от имплементацията.
 
 - `Person.hpp`:
 ```c++
@@ -148,15 +148,55 @@ public:
     }
 ```
 
-Това, както видяхме от примера преди, ще изпечата само `Person` частта на обектите (име и години). Ако искаме да се извежда цялата информация имаме следния вариант: при всяка итерация на цикъла да проверяваме какъв е типът на обекта, към който сочи указателя, и да преобразуваме указателя то този тип. Типа на обекта можем да проверяваме с помощта на  [typeid](https://en.cppreference.com/w/cpp/language/typeid). Пример:
+Това, както видяхме от примера преди, ще изпечата само `Person` частта на обектите (име и години). Ако искаме да се извежда цялата информация имаме следния вариант: при всяка итерация на цикъла да проверяваме какъв е типът на обекта, към който сочи указателя, и да преобразуваме указателя до този тип. Един вариант за това е да добавим променлива (примерно enum) в Person, която да казва от какъв тип е обекта.
+
 ```c++
-    for(Person* ptr : vec)
+
+enum Type {
+    PERSON,
+    STUDENT,
+    TEACHER
+};
+
+class Person
+{
+protected:
+
+    char* name;
+    int age;
+    Type type;
+
+public:
+    Person(const char* Name, int Age);
+    Person(const Person& copyFrom);
+    Person& operator=(const Person& rhs);
+    ~Person();
+
+    Type getType() const;    
+    const char* getName() const;
+    int getAge() const;
+
+    void print() const;
+    void println() const;
+
+    bool setName(const char*);
+    bool setAge(int);
+
+    bool operator<(const Person& rhs) const;
+};
+```
+
+И след това да проверяваме от какъв тип е и да преобразуваме: 
+ 
+ Пример:
+```c++
+    for(Person* ptr : teachersAndStudents)
     {
-        if(typeid(*ptr) == typeid(Student))
+        if(ptr->getType() == STUDENT)
         {
             ((Student*)ptr)->println();
         }
-        else if (typeid(*ptr) == typeid(Teacher))
+        else if (ptr->getType() == TEACHER)
         {
             ((Teacher*)ptr)->println();
         }
@@ -254,10 +294,218 @@ Name: Ivan Ivanov; age: 22; fn: 888888
 
 Най-често задавани въпроси относно виртуални функции може да намерите [тук](https://isocpp.org/wiki/faq/virtual-functions).
 
-# Полиморфизъм
-
-## Виртуален деструктор
-
-Когато има поне една виртуална функция в някой клас и деструктора трябва да е виртуален, за да се извика правилния деструктор когато трием обекти от динамичната памет чрез указател от базов клас.
-
 # Абстрактни класове
+
+Абстрактен клас е клас, който има поне една чисто виртуална (pure virtual) функция. Чисто виртуална функция се създава като се напише ` = 0;` при декларацията на функцията. Пример:
+
+```c++
+    class A {
+
+    public:
+        virtual void foo() const = 0;
+    }
+
+```
+
+Това означава, че тази функция е чисто виртуална и чисто виртуалните фунцкии най-често не се имплементират, а се override-ват в клас-наследник. Ако в клас-наследник не се override-ва тя си остава чисто виртуална и в него и той ще е абстрактен клас. Обаче, не е забранено да се имплементира чисто виртуална функция. Повече за това може да намерите на следните адреси:
+- https://stackoverflow.com/questions/2089083/pure-virtual-function-with-implementation
+- https://stackoverflow.com/questions/12918637/why-does-it-make-sense-to-give-definition-for-a-pure-virtual-function
+
+Override-ване на чисто виртуална функция става по следния начин:
+```c++
+    class B: public A {
+
+    public:
+        void foo() const override {
+            // code
+        }
+    }
+```
+
+#### Обекти от абстрактен клас не могат да бъдат създавани.
+
+Ако искаме да направим някой клас абстрактен, но не искаме да направим нито една функция чисто виртуална, тогава може да направим деструктора на този клас чисто виртуален, но трябва задължително да го имплементираме. Пример:
+
+```c++
+    class A {
+
+    public:
+        void foo() const;
+
+        virtual ~A() = 0;
+    }
+
+    A::~A() {
+
+    }
+
+```
+
+# Множествено наследяване
+
+C++ ни позволява да правим множествено наследяване, т.е. даден клас да наследява повече от един клас. Конструкторите на базовите класове ще се извикат в реда, в който са наследени, а деструкторите в обратен ред.
+
+Нека разгледаме следните класове:
+
+```c++
+    class A
+    {
+    protected:
+        int varA;
+
+    public:
+
+        A(int _varA = 0) : varA(_varA) {}
+
+        void print()
+        {
+            std::cout << "class A: varA - " << varA;
+        }
+
+    };
+
+    class B : public A
+    {
+        int varB;
+
+    public:
+
+        B(int _varA, int _varB) : A(_varA), varB(_varB) {}
+
+        void print()
+        {
+            A::print();
+            std::cout << "class B: varB - " << varB;
+        }
+
+    };
+
+    class C : public A
+    {
+        int varC;
+
+    public:
+
+        C(int _varA, int _varC) : A(_varA), varC(_varC) {}
+
+        void print()
+        {
+            A::print();
+            std::cout << "class C: varC - " << varC;
+        }
+
+    };
+
+    class D : public B, public C
+    {
+        int varD;
+
+    public:
+
+        D(int _varA, int _varB, int _varC, int _varD) : B(_varA, _varB), C(_varA, _varC), varD(_varD) {}
+
+        void print()
+        {
+            B::print();
+            std::cout << '\n';
+            C::print();
+            std::cout << '\n';
+            std::cout << "class D: varD - " << varD;
+        }
+
+    };
+```
+
+Тук вече класът `D` ще съдържа два пъти класа `A`, един път през `B` и един път през `C`. Ако се опитаме в класа `D` да достъпим нещо от `A`, като например променливата `varA`, компилатора няма да знае коя да достъпи, дали тази наследена от `B` или тази от `C`. Това се нарича проблема на диаманта (diamond problem).
+
+## Diamond problem
+
+За да имаме еднозначност, трябва частта наследена от `A`, да е еднозначна, т.е. в класа `D` тя да се наследи само един път. Това постигаме с това, че при `B` и `C` наследяваме `A` "виртуално". Синтаксиса се следният:
+```c++
+    class C : virtual public A {
+        // ...
+    };
+
+    class B : virtual public A {
+        // ...
+    }
+```
+
+Така вече имаме единствено `A`, но извикването на конструктора на `A` вече трябва да го направим експлицитно в класа `D`, не да очакваме, че това ще стане през класа `B` или `C`. 
+
+```c++
+    D(int _varA, int _varB, int _varC, int _varD) : A(_varA), B(_varA, _varB), C(_varA, _varC), varD(_varD) {}
+```
+
+Вече можем да достъпваме членовете от `A` в `D` без да имаме проблем с нееднозначността.
+
+Целият код изглежда така:
+```c++
+    class A
+    {
+    protected:
+        int varA;
+
+    public:
+
+        A(int _varA = 0) : varA(_varA) {}
+
+        void print()
+        {
+            std::cout << "class A: varA - " << varA;
+        }
+
+    };
+
+    class B : virtual public A
+    {
+        int varB;
+
+    public:
+
+        B(int _varA, int _varB) : A(_varA), varB(_varB) {}
+
+        void print()
+        {
+            A::print();
+            std::cout << "class B: varB - " << varB;
+        }
+
+    };
+
+    class C : virtual public A
+    {
+        int varC;
+
+    public:
+
+        C(int _varA, int _varC) : A(_varA), varC(_varC) {}
+
+        void print()
+        {
+            A::print();
+            std::cout << "class C: varC - " << varC;
+        }
+
+    };
+
+    class D : public B, public C
+    {
+        int varD;
+
+    public:
+
+        D(int _varA, int _varB, int _varC, int _varD) : A(_varA), B(_varA, _varB), C(_varA, _varC), varD(_varD) {}
+
+        void print()
+        {
+            B::print();
+            std::cout << '\n';
+            C::print();
+            std::cout << '\n';
+            std::cout << "class D: varD - " << varD;
+        }
+
+    };
+
+```
