@@ -18,11 +18,11 @@ public:
 
     LinkedList();
 
-    void push_front(T v);
-    void push_back(T v);
-    void insert_at(size_t index, T value);
-    T pop_front();
-    T pop_back();
+    void push_front(const T& v);
+    void push_back(const T& v);
+    void insert_at(size_t index, const T& value);
+    void pop_front();
+    void pop_back();
     T remove_at(size_t index);
 
     T peek_front() const;
@@ -30,7 +30,7 @@ public:
     T peek_at(size_t index) const;
     
     // recursive versions
-    void push_back_rec(T value)
+    void push_back_rec(const T& value)
     {   
         // calling recursive helper function
         first = _push_back_recursive(first, value);
@@ -56,7 +56,7 @@ public:
     ~LinkedList();
 
 private:
-    Node<T>* _push_back_recursive(Node<T>*, T);
+    Node<T>* _push_back_recursive(Node<T>*, const T&);
     Node<T>* _remove_at_recursive(Node<T>*, size_t);
 };
 
@@ -68,7 +68,7 @@ LinkedList<T>::LinkedList()
 }
 
 template <typename T>
-void LinkedList<T>::push_front(T v)
+void LinkedList<T>::push_front(const T& v)
 {
     Node<T>* toAdd = new Node<T>();
     toAdd->value = v;
@@ -78,7 +78,7 @@ void LinkedList<T>::push_front(T v)
 }
 
 template <typename T>
-Node<T>* LinkedList<T>::_push_back_recursive(Node<T>* current, T value)
+Node<T>* LinkedList<T>::_push_back_recursive(Node<T>* current, const T& value)
 {
     if (current == nullptr)
     {
@@ -110,7 +110,7 @@ Node<T>* LinkedList<T>::_remove_at_recursive(Node<T>* current, size_t index)
 }
 
 template <typename T>
-void LinkedList<T>::push_back(T v)
+void LinkedList<T>::push_back(const T& v)
 {
     Node<T>* tmp = first;
 
@@ -136,7 +136,7 @@ void LinkedList<T>::push_back(T v)
 }
 
 template <typename T>
-void LinkedList<T>::insert_at(size_t index, T value)
+void LinkedList<T>::insert_at(size_t index, const T& value)
 {
     if (index > size) // не е >= защото можем да добавяме и в края
     {
@@ -167,29 +167,25 @@ void LinkedList<T>::insert_at(size_t index, T value)
 }
 
 template <typename T>
-T LinkedList<T>::pop_front() 
+void LinkedList<T>::pop_front() 
 {
     if (first == nullptr)
     {
         std::cerr << "List is empty\n";
-        return T();
     }
 
-    T returnValue = first->value;
     Node<T>* tmpPtr = first->next; // <=> (*first).next;
     delete first;
     first = tmpPtr;
     --size;
-    return returnValue;
 }
 
 template <typename T>
-T LinkedList<T>::pop_back()
+void LinkedList<T>::pop_back()
 {
     if(first == nullptr)
     {
         std::cerr << "List is empty\n";
-        return T();
     }
 
     Node<T>* tmp = first;
@@ -197,7 +193,8 @@ T LinkedList<T>::pop_back()
 
     if(tmpNext == nullptr)
     {
-        return pop_front();
+        pop_front();
+        return;
     }
 
     while(tmpNext->next != nullptr)
@@ -206,12 +203,10 @@ T LinkedList<T>::pop_back()
         tmpNext = tmpNext->next;
     }
     
-    T returnValue = tmpNext->value;
-    
+
     delete tmpNext;
     tmp->next = nullptr;
     --size;
-    return returnValue;
 }
 
 template <typename T>

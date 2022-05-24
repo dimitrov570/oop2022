@@ -22,20 +22,26 @@ int main()
     lst.remove_at_rec(3);
     
     lst.print();
-    std::cout << "Popping back: " << lst.pop_back() << '\n';
+    std::cout << "Popping back: " << lst.peek_back() << '\n';
+    lst.pop_back();
     lst.print();
-    std::cout << "Popping front: " << lst.pop_front() << '\n';
+    std::cout << "Popping front: " << lst.peek_front() << '\n';
+    lst.pop_front();
     lst.print();
-    std::cout << "Popping front: " << lst.pop_front() << '\n';
+    std::cout << "Popping front: " << lst.peek_front() << '\n';
+    lst.pop_front();
     lst.print();
-    std::cout << "Popping front: " << lst.pop_front() << '\n';
+    std::cout << "Popping front: " << lst.peek_front() << '\n';
+    lst.pop_front();
     lst.print();
-
+    
     //empty
     std::cout << "List size: " << lst.getSize() << '\n';
-    std::cout << "Popping front: " << lst.pop_front() << '\n';
+    std::cout << "Popping front: " << lst.peek_front() << '\n';
+    lst.pop_front();
     lst.print();
-    std::cout << "Popping back: " << lst.pop_back() << '\n';
+    std::cout << "Popping back: " << lst.peek_back() << '\n';
+    lst.pop_back();
     lst.print();
     return 0;
 }

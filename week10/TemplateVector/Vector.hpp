@@ -63,9 +63,9 @@ public:
 		return lastIndex == size - 1;
 	}
 
-	bool setAt(int index, T value);
-	void push_back(T);
-	T pop_back();
+	bool setAt(int index, const T& value);
+	void push_back(const T&);
+	void pop_back();
 	
 	// by returning int& you can write directly to the data array like: vec[i] = 5;
 	T& operator[](int) const;
@@ -161,7 +161,7 @@ T Vector<T>::getLast() const
 }
 
 template <typename T>
-bool Vector<T>::setAt(int index, T value)
+bool Vector<T>::setAt(int index, const T& value)
 {
 	if (indexIsInRange(index))
 	{
@@ -173,7 +173,7 @@ bool Vector<T>::setAt(int index, T value)
 }
 
 template <typename T>
-void Vector<T>::push_back(T value)
+void Vector<T>::push_back(const T& value)
 {
 	if (isFull()) // if there is no space left to add, increase vector size
 	{
@@ -185,12 +185,12 @@ void Vector<T>::push_back(T value)
 
 
 template <typename T>
-T Vector<T>::pop_back()
+void Vector<T>::pop_back()
 {
 	if (isEmpty())
 	{
 		std::cerr << EMPTY_VECTOR_MESSAGE << '\n';
-		return 0;
+		return;
 	}
 
 	
@@ -202,7 +202,7 @@ T Vector<T>::pop_back()
 		shrink();
 	}
 
-	return data[lastIndex--]; //return value stored at lastIndex, and then decrement lastIndex (postfix)
+	--lastIndex; // decrement lastIndex
 }
 
 template <typename T>
