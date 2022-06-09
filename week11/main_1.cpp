@@ -7,19 +7,12 @@ class Student {
   int age;
   std::string name;
 
-
 public:
 
   Student() = default;
 
-
-  Student(const char* _name, int _age) : name(_name), age(_age) 
-  { 
+  Student(const char* _name, int _age) : name(_name), age(_age) { 
  
-  }
-
-  Student(const Student& other) : name(other.name), age(other.age) {
-
   }
 
   Student(Student&& other) : name(std::move(other.name)), age(other.age) {
@@ -45,10 +38,8 @@ Student makeStudent(const char* name, int age) {
 
 int main() {
 
-  Student st("ivan", 33);
-  Student st1 = st;
-
-  
+  Student st;
+  st = makeStudent("ivan", 33);
 
   return 0;
 }

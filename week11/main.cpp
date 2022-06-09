@@ -1,12 +1,12 @@
 #include <iostream>
-#include <string>
+#include <cstring>
 
 class Student {
   char* name;
 
   int age;
 
-  void allocate_name(const char* other_name) {
+  void copy_array(const char* other_name) {
     name = new char[strlen(other_name) + 1];
     strcpy(name, other_name);
   }
@@ -17,31 +17,47 @@ class Student {
 
 public:
 
-  Student() = default;
-
+  Student() : name(nullptr) { // name трябва да е nullptr, за да няма грешки при delete[] name
+    age = -1;
+  }
 
   Student(const char* _name, int _age) : age(_age) 
   { 
-    allocate_name(_name);
+    copy_array(_name);
   }
 
   Student(const Student& other) : age(other.age) {
-    allocate_name(other.name);
+    copy_array(other.name);
   }
 
   Student(Student&& other) : name(other.name), age(other.age) {
-    other.name = nullptr;
+     other.name = nullptr;
+  }
+
+  Student& operator=(const Student& other) {
+  
+    if(this != &other) {
+      free();
+
+      copy_array(other.name);
+      age = other.age;
+    }
+
+    return *this;
   }
 
   Student& operator=(Student&& other) {
+    
     if(this != &other) {
       free();
       name = other.name;
       age = other.age;
+
+      other.name = nullptr;
     }
+    
     return *this;
   }
-
 
   ~Student()
   {
