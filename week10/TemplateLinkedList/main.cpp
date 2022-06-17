@@ -37,7 +37,7 @@ int main()
     
     //empty
     std::cout << "List size: " << lst.getSize() << '\n';
-    std::cout << "Popping front: " << lst.peek_front() << '\n';
+    std::cout << "Popping front: " << lst.peek_front() << '\n'; // should throw exception
     lst.pop_front();
     lst.print();
     std::cout << "Popping back: " << lst.peek_back() << '\n';

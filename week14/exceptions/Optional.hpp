@@ -10,7 +10,7 @@ class Optional
     T result;
 
 public:
-    Optional(int errorCode, bool isError = true, T result = 0) : errorCode(errorCode), isError(isError), result(result)
+    Optional(int errorCode, bool isError, const T& result) : errorCode(errorCode), isError(isError), result(result)
     {}
 
 
@@ -19,7 +19,7 @@ public:
         return isError;
     }
 
-    T getResult() const
+    const T& getResult() const
     {
         return result;
     }

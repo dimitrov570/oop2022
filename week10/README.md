@@ -121,7 +121,7 @@ class Pair
 	F first;
 	S second;
 
-	Pair(F first, S second) : first(first), second(second) {}
+	Pair(const F& first, const S& second) : first(first), second(second) {}
 
 	bool operator<(const Pair&) const;
 
@@ -151,7 +151,7 @@ class Pair
 	F first;
 	S second;
 
-	Pair(F first, S second) : first(first), second(second) {}
+	Pair(const F& first, const S& second) : first(first), second(second) {}
 
 	bool operator<(const Pair&) const;
 

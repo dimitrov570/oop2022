@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <exception>
 
 template <typename T>
 struct Node
@@ -23,11 +24,11 @@ public:
     void insert_at(size_t index, const T& value);
     void pop_front();
     void pop_back();
-    T remove_at(size_t index);
+    void remove_at(size_t index);
 
-    T peek_front() const;
-    T peek_back() const;
-    T peek_at(size_t index) const;
+    const T& peek_front() const;
+    const T& peek_back() const;
+    const T& peek_at(size_t index) const;
     
     // recursive versions
     void push_back_rec(const T& value)
@@ -210,17 +211,17 @@ void LinkedList<T>::pop_back()
 }
 
 template <typename T>
-T LinkedList<T>::remove_at(size_t index)
+void LinkedList<T>::remove_at(size_t index)
 {
     if (index >= size)
     {
         std::cerr << "Invalid index\n";
-        return T();
     }
 
     if(index == 0)
     {
-        return pop_front();
+        pop_front();
+        return;
     }
     
     Node<T>* tmp = first;
@@ -234,32 +235,28 @@ T LinkedList<T>::remove_at(size_t index)
         ++counter;
     }
     
-    T returnValue = tmpNext->value;
     tmp->next = tmpNext->next;
     delete tmpNext;
-    --size;
-    return returnValue;
+    --size;    
 }
 
 template <typename T>
-T LinkedList<T>::peek_front() const
+const T& LinkedList<T>::peek_front() const
 {
     if (first == nullptr)
     {
-        std::cerr << "List is empty\n";
-        return T();
+        throw std::logic_error("List is empty!");
     }
 
     return first->value;
 }
 
 template <typename T>
-T LinkedList<T>::peek_back() const
+const T& LinkedList<T>::peek_back() const
 {
     if (first == nullptr)
     {
-        std::cerr << "List is empty\n";
-        return T();
+        throw std::logic_error("List is empty!");
     }
 
     Node<T>* tmp = first;
@@ -273,12 +270,11 @@ T LinkedList<T>::peek_back() const
 }
 
 template <typename T>
-T LinkedList<T>::peek_at(size_t index) const
+const T& LinkedList<T>::peek_at(size_t index) const
 {
     if (index >= size)
     {
-        std::cerr << "Invalid index\n";
-        return T();
+        throw std::logic_error("Invalid index!");
     }
 
     if(index == 0)

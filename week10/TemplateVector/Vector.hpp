@@ -33,19 +33,13 @@ public:
 	Vector& operator=(const Vector& rhs);
 	~Vector();
 
-	T getAt(int) const;
-	T getLast() const;
+	const T& getAt(int) const;
+	const T& getLast() const;
 
 	
 	int getSize() const
 	{
 		return size;
-	}
-
-	void compileTest(T i)
-	{
-		std::cout << "Has iterator" << '\n';
-		auto it = i.begin();
 	}
 
 	unsigned int getNumberOfElements() const
@@ -66,6 +60,8 @@ public:
 	bool setAt(int index, const T& value);
 	void push_back(const T&);
 	void pop_back();
+	// insertAt function, which inserts element at given index should be added
+	// removeAt function, which removes element at given index should be added
 	
 	// by returning int& you can write directly to the data array like: vec[i] = 5;
 	T& operator[](int) const;
@@ -138,7 +134,7 @@ Vector<T>::~Vector()
 }
 
 template <typename T>
-T Vector<T>::getAt(int index) const
+const T& Vector<T>::getAt(int index) const
 {
 	if (0 < index || index > lastIndex)
 	{
@@ -150,7 +146,7 @@ T Vector<T>::getAt(int index) const
 }
 
 template <typename T>
-T Vector<T>::getLast() const
+const T& Vector<T>::getLast() const
 {
 	if (isEmpty())
 	{
